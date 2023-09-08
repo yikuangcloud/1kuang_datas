@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavThemeMapper">
+    
+    <resultMap type="DatavTheme" id="DatavThemeResult">
+        <result property="themeId"    column="theme_id"    />
+        <result property="isOpen"    column="is_open"    />
+        <result property="themeName"    column="theme_name"    />
+        <result property="themeColor"    column="theme_color"    />
+        <result property="themeOption"    column="theme_option"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDatavThemeVo">
+        select theme_id, is_open, theme_name, theme_color, theme_option, status, del_flag, create_by, create_time, update_by, update_time, remark from datav_theme
+    </sql>
+
+    <select id="selectDatavThemeList" parameterType="DatavTheme" resultMap="DatavThemeResult">
+        <include refid="selectDatavThemeVo"/>
+        	where del_flag = '0' 
+            <if test="isOpen != null  and isOpen != ''"> and is_open = #{isOpen}</if>
+            <if test="themeName != null  and themeName != ''"> and theme_name like concat('%', #{themeName}, '%')</if>
+            <if test="createBy != null  and createBy != ''"> and (is_open = '1' or create_by = #{createBy})</if>
+    </select>
+    
+    <select id="selectDatavThemeById" parameterType="String" resultMap="DatavThemeResult">
+        <include refid="selectDatavThemeVo"/>
+        where theme_id = #{themeId}
+    </select>
+        
+    <insert id="insertDatavTheme" parameterType="DatavTheme">
+        insert into datav_theme
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="themeId != null  and themeId != ''">theme_id,</if>
+            <if test="isOpen != null  and isOpen != ''">is_open,</if>
+            <if test="themeName != null  and themeName != ''">theme_name,</if>
+            <if test="themeColor != null  and themeColor != ''">theme_color,</if>
+            <if test="themeOption != null  and themeOption != ''">theme_option,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="themeId != null  and themeId != ''">#{themeId},</if>
+            <if test="isOpen != null  and isOpen != ''">#{isOpen},</if>
+            <if test="themeName != null  and themeName != ''">#{themeName},</if>
+            <if test="themeColor != null  and themeColor != ''">#{themeColor},</if>
+            <if test="themeOption != null  and themeOption != ''">#{themeOption},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDatavTheme" parameterType="DatavTheme">
+        update datav_theme
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isOpen != null  and isOpen != ''">is_open = #{isOpen},</if>
+            <if test="themeName != null  and themeName != ''">theme_name = #{themeName},</if>
+            <if test="themeColor != null  and themeColor != ''">theme_color = #{themeColor},</if>
+            <if test="themeOption != null  and themeOption != ''">theme_option = #{themeOption},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where theme_id = #{themeId}
+    </update>
+
+    <delete id="deleteDatavThemeById" parameterType="String">
+        update datav_theme set del_flag = '1' where theme_id = #{themeId}
+    </delete>
+
+    <delete id="deleteDatavThemeByIds" parameterType="String">
+        delete from datav_theme where theme_id in 
+        <foreach item="themeId" collection="array" open="(" separator="," close=")">
+            #{themeId}
+        </foreach>
+    </delete>
+    
+</mapper>

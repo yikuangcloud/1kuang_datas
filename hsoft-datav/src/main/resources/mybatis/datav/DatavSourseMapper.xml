@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavSourseMapper">
+    
+    <resultMap type="DatavSourse" id="DatavSourseResult">
+        <result property="id"    column="id"    />
+        <result property="databaseType"    column="database_type"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="port"    column="port"    />
+        <result property="databaseName"    column="database_name"    />
+        <result property="linkName"    column="link_name"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDatavSourseVo">
+        select id, database_type, ip_address, port, database_name, link_name, username, password, del_flag, create_by, create_time, update_by, update_time, remark from datav_data_source
+    </sql>
+
+    <select id="selectDatavSourseList" parameterType="DatavSourse" resultMap="DatavSourseResult">
+        <include refid="selectDatavSourseVo"/>
+	        where del_flag = '0' 
+	           <!-- <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if> -->
+	           <if test="ipAddress != null  and ipAddress != ''"> and ip_address like concat('%', #{ipAddress}, '%')</if>
+	           <if test="databaseName != null  and databaseName != ''"> and database_name like concat('%', #{databaseName}, '%')</if>
+	           <if test="linkName != null  and linkName != ''"> and link_name like concat('%', #{linkName}, '%')</if>
+	           <if test="createBy != null  and createBy != ''"> and (create_by = #{createBy})</if>
+        <!-- order by create_time desc -->
+    </select>
+    
+    <insert id="insertDatavSourse" parameterType="DatavSourse">
+        insert into datav_data_source
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null ">id,</if>
+            <if test="databaseType != null  and databaseType != ''">database_type,</if>
+            <if test="ipAddress != null  and ipAddress != ''">ip_address,</if>
+            <if test="port != null  and port != ''">port,</if>
+            <if test="databaseName != null  and databaseName != ''">database_name,</if>
+            <if test="linkName != null  and linkName != ''">link_name,</if>
+            <if test="username != null  and username != ''">username,</if>
+            <if test="password != null  and password != ''">password,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="databaseType != null  and databaseType != ''">#{databaseType},</if>
+            <if test="ipAddress != null  and ipAddress != ''">#{ipAddress},</if>
+            <if test="port != null  and port != ''">#{port},</if>
+            <if test="databaseName != null  and databaseName != ''">#{databaseName},</if>
+            <if test="linkName != null  and linkName != ''">#{linkName},</if>
+            <if test="username != null  and username != ''">#{username},</if>
+            <if test="password != null  and password != ''">#{password},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+    
+    <update id="updateDatavSourse" parameterType="DatavSourse">
+        update datav_data_source
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="databaseType != null  and databaseType != ''">database_type = #{databaseType},</if>
+            <if test="ipAddress != null  and ipAddress != ''">ip_address = #{ipAddress},</if>
+            <if test="port != null  and port != ''">port = #{port},</if>
+            <if test="databaseName != null  and databaseName != ''">database_name = #{databaseName},</if>
+            <if test="linkName != null  and linkName != ''">link_name = #{linkName},</if>
+            <if test="username != null  and username != ''">username = #{username},</if>
+            <if test="password != null  and password != ''">password = #{password},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteDatavSourseById" parameterType="String">
+        update datav_data_source
+		set del_flag = '1'
+		where id = #{id}
+    </delete>
+    
+    <select id="selectSourseById" parameterType="DatavSourse" resultMap="DatavSourseResult">
+        <include refid="selectDatavSourseVo"/> where del_flag = '0' and id = #{id} order by create_time desc
+    </select>
+    
+    <delete id="deleteSourseByIds" parameterType="String">
+ 	    update datav_data_source set del_flag = '1' where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
+ 			#{id}
+        </foreach> 
+ 	</delete>
+    
+</mapper>

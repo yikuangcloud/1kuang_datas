@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavClassificationMapper">
+    
+    <resultMap type="DatavClassification" id="DatavClassificationResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="no"    column="no"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentIds"    column="parent_ids"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDatavClassificationVo">
+        select id, name, no, parent_id, parent_ids, sort, status, del_flag, create_by, create_time, update_by, update_time, remark from datav_classification
+    </sql>
+
+    <select id="selectDatavClassificationList" parameterType="DatavClassification" resultMap="DatavClassificationResult">
+        <include refid="selectDatavClassificationVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="no != null  and no != ''"> and no = #{no}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''"> and (parent_id = 0 or create_by = #{createBy})</if>
+        </where>
+    </select>
+    
+    <select id="selectDatavClassificationById" parameterType="String" resultMap="DatavClassificationResult">
+        <include refid="selectDatavClassificationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDatavClassification" parameterType="DatavClassification">
+        insert into datav_classification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="no != null  and no != ''">no,</if>
+            <if test="parentId != null  and parentId != ''">parent_id,</if>
+            <if test="parentIds != null  and parentIds != ''">parent_ids,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="no != null  and no != ''">#{no},</if>
+            <if test="parentId != null  and parentId != ''">#{parentId},</if>
+            <if test="parentIds != null  and parentIds != ''">#{parentIds},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDatavClassification" parameterType="DatavClassification">
+        update datav_classification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="no != null  and no != ''">no = #{no},</if>
+            <if test="parentId != null  and parentId != ''">parent_id = #{parentId},</if>
+            <if test="parentIds != null  and parentIds != ''">parent_ids = #{parentIds},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDatavClassificationById" parameterType="String">
+        delete from datav_classification where id = #{id}
+    </delete>
+
+    <delete id="deleteDatavClassificationByIds" parameterType="String">
+        delete from datav_classification where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

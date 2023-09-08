@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sys.sysName}">XXX系统</title>
+    <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <style>
+        /* 菜单鼠标放上去时，左边的提示条对不齐，直接屏蔽*/
+        .layui-nav-bar{
+            display: none;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <div class="layui-header"  th:style="${' background-color:' + sys.sysColor + ' !important;'}">
+            <div class="layui-logo"><img th:src='${sys.sysLogo}' class="layui-nav-img"/> <span th:text="${sys.sysName}"></span></div>
+            <ul class="layui-nav layui-layout-left">
+                <!-- 动态读取加载用户快捷菜单 -->
+                <li class="layui-nav-item" th:each="menu,iterStat : ${shortcutMenuList}">
+                    <a th:text="${menu.shortcutMenuName}"
+                       th:data-url="${menu.shortcutMenuPath.indexOf('http') == -1 ? #request.getContextPath() + menu.shortcutMenuPath : menu.shortcutMenuPath}"
+                       th:data-id="${menu.shortcutMenuId}" class="huanzi-menu" href="javascript:;">XXX菜单</a>
+                    <dl class="layui-nav-child" th:if="${#lists.size(menu.children)} > 0">
+                        <th:block th:include="common/head::shortcutMenu(${menu.children})"></th:block>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="https://avatar.gitee.com/uploads/0/5137900_huanzi-qch.png!avatar100?1562729811"
+                             class="layui-nav-img">
+                        <span th:text="${loginUser.userName}">XXX</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/userinfo'" data-id="userinfo" href="javascript:;">基本资料</a></dd>
+                        <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/shortcMenu'" data-id="shortcMenu" href="javascript:;">个性菜单</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <div class="layui-side layui-bg-black"  th:style="${' background-color:' + sys.sysColor + ' !important;'}">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-shrink="all" th:style="${' background-color:' + sys.sysColor + ' !important;'}">
+                    <!-- 动态读取加载系统菜单 -->
+                    <li class="layui-nav-item" th:each="menu,iterStat : ${menuList}">
+                        <a th:text="${menu.menuName}"
+                           th:data-url="${#request.getContextPath() + menu.menuPath}"
+                           th:data-id="${menu.menuId}" class="huanzi-menu" href="javascript:;">XXX菜单</a>
+                        <dl class="layui-nav-child" th:if="${#lists.size(menu.children)} > 0">
+                            <th:block th:include="common/head::sysMenu(${menu.children})"></th:block>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body" style="overflow-y: hidden;">
+            <!--   动态选项卡   -->
+            <div class="layui-tab" lay-filter="demo" lay-allowclose="true">
+                <!-- 标题 -->
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="11">首页</li>
+                </ul>
+                <!-- 内容 -->
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="indexTabContent"  class="layui-row layui-col-space15 tab-content-div" style="padding: 20px;background-color: #F2F2F2;overflow: auto;">
+                            <div class="layui-col-md6">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">欢迎使用</div>
+                                    <div class="layui-card-body">
+                                        欢迎你，<span th:text="${loginUser.userName}"></span>
+                                        <br/>
+                                        <br/>
+                                        <p>Base Admin是一套简单通用的后台管理系统，主要功能有：权限管理、菜单管理、用户管理，系统设置、实时日志，实时监控，API加密，以及登录用户修改密码、配置个性菜单等</p>
+                                        <br/>
+                                        <br/>
+                                        <p>作者：huanzi-qch</p>
+                                        <p>博客：https://www.cnblogs.com/huanzi-qch</p>
+                                        <p>github：https://github.com/huanzi-qch</p>
+                                        <p>gitee：https://gitee.com/huanzi-qch</p>
+                                        <p>QQ交流群：1015379123</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">系统公告</div>
+                                    <div class="layui-card-body">
+                                        <div th:utext="${sys.sysNoticeText}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-card">
+                                    <div class="layui-card-header"><span style='color: #1e2a35;cursor: pointer; ' onclick="window.open('https://huanzi-qch.gitee.io/file-server/ad/adservice.html', '_blank')" title="AD广告位服务说明">AD广告位</span>（长期招租，如有需要请私信）</div>
+                                    <div class="layui-card-body">
+                                        <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/activity?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】阿里云最全的优惠活动聚集地！</span><br/>
+                                        <br/>
+                                        <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=11447&cps_key=e1c9db729edccd479fc902634492bf53', '_blank')" title="AD广告！">【腾讯云】腾讯云当前最新优惠活动专区！</span><br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部固定区域 -->
+        <div class="layui-footer" th:utext="${sys.sysBottomText}">
+            © XXX系统
+        </div>
+    </div>
+    <script th:inline="javascript">
+        //获取后端RSA公钥并存到sessionStorage
+        sessionStorage.setItem('javaPublicKey', [[${publicKey}]]);
+
+        //获取api加密开关并存到sessionStorage
+        sessionStorage.setItem('sysApiEncrypt', [[${sys.sysApiEncrypt}]]);
+
+        //如果开启了检查密码复杂度且最近修改密码时间 > 90天则弹窗提示
+        sessionStorage.setItem('sysCheckPwdEncrypt', [[${sys.sysCheckPwdEncrypt}]]);
+        if("Y" === [[${sys.sysCheckPwdEncrypt}]] && new Date() - new Date([[${loginUser.lastChangePwdTime}]]) > 1000 * 60 * 60 * 24 * 90){
+            let closeBtn = 1;//0 隐藏关闭按钮强制修改密码，1 不强制
+            layui.use(['layer'], function () {
+                let layer = layui.layer;
+                layer.alert("距离上次修改密码已经超过90天，为了您的账号安全请及时更新密码！",{closeBtn:closeBtn},function (){
+                    commonUtil.updatePassword(closeBtn);
+                });
+            });
+        }
+
+        //重写jq的ajax加密
+        jQueryExtend.ajaxExtend();
+    </script>
+    <script>
+        let layer;
+        layui.use(['layer','element'], function () {
+            let element = layui.element;
+            layer = layui.layer;
+
+            //首页内容高度
+            $("#indexTabContent").css("height",($(".layui-body")[0].offsetHeight - 94) + "px");
+
+            /**
+             * 菜单点击事件
+             */
+            $("body").on("click", ".huanzi-menu", function (e) {
+                if($(this).next("dl").length > 0){
+                    return;
+                }
+                let url = $(this).data("url");
+                let id = $(this).data("id");
+                let text = $(this).text();
+
+                //如果不存在
+                if ($(".layui-tab-title").find("li[lay-id='" + id + "']").length <= 0) {
+                    element.tabAdd('demo', {
+                        title: text,
+                        //iframe子页面onload新增监听src为/loginPage是父页面跳转/loginPage，解决“俄罗斯套娃”问题
+                        content: "<iframe class='tab-content-div' onload='if(this.contentWindow.location.pathname == \""+ctx+"/loginPage\"){window.location.href = \""+ctx+"/loginPage\"};' width='100%' height='" + ($(".layui-body")[0].offsetHeight - 61) + "px" + "' frameborder='0' scrolling='auto' src=\"" + url + "\"></iframe>",
+                        id: id
+                    });
+                }
+                element.tabChange('demo', id);
+            });
+
+            /**
+             * 监听浏览器可视高度，自适应设置高度
+             */
+            window.onresize = function (ev) {
+                let h = 94;
+                if($(".layui-show .tab-content-div")[0].nodeName === "IFRAME"){
+                    h = 61;
+                }
+                $(".tab-content-div").css("height",($(".layui-body")[0].offsetHeight - h) + "px");
+            }
+        });
+    </script>
+</body>
+</html>

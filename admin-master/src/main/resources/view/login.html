@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sys.sysName} + '  登录页面'"></title>
+    <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <style>
+        /*上下左右居中*/
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <h1 style="text-align: center" th:text="${sys.sysName}">XXX系统</h1>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号<i class="layui-icon layui-icon-username"></i></label>
+            <div class="layui-input-block">
+                <input type="text" id="username" name="username" placeholder="请输入账号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码<i class="layui-icon layui-icon-password"></i></label>
+            <div class="layui-input-block">
+                <!-- 为了方便测试，密码类型设置成text，发布生产前记得改回来 -->
+                <input type="text" id="password" name="password" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证码</label>
+            <div class="layui-input-inline">
+                <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" class="layui-input" style="float: left;width: 52%">
+                <img id="captchaImg" th:src="@{/getVerifyCodeImage}" onclick="changeCode()"/><!-- <a href="javascript:changeCode()">看不清换一张</a>-->
+            </div>
+        </div>
+        <div class="layui-form-item" style="float: right;">
+            <input id="remember-me" type="checkbox" title="七天免登陆" name="rememberMe" checked lay-skin="primary">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" onclick="formSubmit()">登录</a>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script th:inline="javascript">
+    //获取后端RSA公钥并存到sessionStorage
+    sessionStorage.setItem('javaPublicKey', [[${publicKey}]]);
+
+    //获取api加密开关并存到sessionStorage
+    sessionStorage.setItem('sysApiEncrypt', [[${sys.sysApiEncrypt}]]);
+
+    //重写jq的ajax加密
+    jQueryExtend.ajaxExtend();
+</script>
+<script>
+    let layer;
+    layui.use(['layer','form'], function () {
+        layer = layui.layer;
+        let form = layui.form;//select、单选、复选等依赖form
+
+        /**
+         * 监听键盘事件
+         */
+        document.addEventListener("keydown",function (even) {
+            //按下Enter回车键
+            if(even.keyCode === 13){
+                formSubmit();
+            }
+        })
+    });
+
+    /**
+     * 登录
+     */
+    function formSubmit() {
+        if(!$("#username").val()){
+            layer.msg("账号不能为空！", {icon: 2,time: 2000});
+            return;
+        }
+        if(!$("#password").val()){
+            layer.msg("密码不能为空！", {icon: 2,time: 2000});
+            return;
+        }
+        if(!$("#captcha").val()){
+            layer.msg("验证码不能为空！", {icon: 2,time: 2000});
+            return;
+        }
+
+        let rememberMe = true;
+        if($("input[name='rememberMe']:checked").length <= 0){
+            rememberMe = false;
+        }
+        layer.load(2);
+        $.post(ctx + "/login", {
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "captcha": $("#captcha").val(),
+            "remember-me": rememberMe,
+        }, function (data) {
+            layer.closeAll();
+            if (data.flag) {
+                layer.msg(data.msg, {icon: 1,time: 1000}, function () {
+                    window.location.href = ctx + "/index";
+                });
+            } else {
+                layer.msg(data.msg, {icon: 2,time: 3000});
+            }
+        })
+    }
+
+    /**
+     * 刷新验证码
+     */
+    function changeCode() {
+        var img = document.getElementById("captchaImg");
+        img.src = ctx + "/getVerifyCodeImage?time=" + new Date().getTime();
+    }
+</script>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavUserEchartsMapper">
+
+    <resultMap type="DatavUserEcharts" id="DatavUserEchartsResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="chartId"    column="chart_id"    />
+    </resultMap>
+
+    <sql id="selectDatavUserEchartsVo">
+        select id, username, chart_id from datav_user_echarts
+    </sql>
+
+    <select id="selectDatavUserEchartsList" parameterType="DatavUserEcharts" resultMap="DatavUserEchartsResult">
+        <include refid="selectDatavUserEchartsVo"/>
+        <where>
+            <if test="username != null  and username != ''"> and username = #{username}</if>
+            <if test="chartId != null "> and chart_id = #{chartId}</if>
+        </where>
+    </select>
+
+    <select id="selectDatavUserEchartsById" parameterType="Long" resultMap="DatavUserEchartsResult">
+        <include refid="selectDatavUserEchartsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDatavUserEcharts" parameterType="DatavUserEcharts" useGeneratedKeys="true" keyProperty="id">
+        insert into datav_user_echarts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null  and username != ''">username,</if>
+            <if test="chartId != null ">chart_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null  and username != ''">#{username},</if>
+            <if test="chartId != null ">#{chartId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDatavUserEcharts" parameterType="DatavUserEcharts">
+        update datav_user_echarts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null  and username != ''">username = #{username},</if>
+            <if test="chartId != null ">chart_id = #{chartId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDatavUserEchartsById" parameterType="Long">
+        delete from datav_user_echarts where chart_id = #{id}
+    </delete>
+
+    <delete id="deleteDatavUserEchartsByIds" parameterType="String">
+        delete from datav_user_echarts where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="delDatavUserEcharts" parameterType="DatavUserEcharts">
+        delete from datav_user_echarts where username = #{username} and chart_id = #{chartId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavEchartsGalleryMapper">
+
+    <resultMap type="DatavEchartsGallery" id="DatavEchartsGalleryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="chartOption"    column="chart_option"    />
+        <result property="graph"    column="graph"    />
+        <result property="component"    column="component"    />
+        <result property="thumbnail"    column="thumbnail"    />
+        <result property="description"    column="description"    />
+        <result property="links"    column="links"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="starCount"    column="star_count"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectDatavEchartsGalleryVo">
+        select id, name, chart_option, graph, component, thumbnail, links, description,view_count, star_count, create_by, create_time from datav_echarts_gallery
+    </sql>
+
+    <select id="selectDatavEchartsGalleryList" parameterType="DatavEchartsGallery" resultMap="DatavEchartsGalleryResult">
+        <include refid="selectDatavEchartsGalleryVo"/>
+        <where>
+            (name like concat('%', #{keyword}, '%')
+            or description like concat('%', #{keyword}, '%'))
+            <if test="chartOption != null  and chartOption != ''"> and chart_option = #{chartOption}</if>
+            <if test="graph != null  and graph != ''"> and graph = #{graph}</if>
+            <if test="component != null  and component != ''"> and component = #{component}</if>
+            <if test="thumbnail != null  and thumbnail != ''"> and thumbnail = #{thumbnail}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+        <!--        order by release_date desc-->
+        <if test='orderBy == "0"'> order by star_count desc</if>
+        <if test='orderBy == "1"'> order by create_time desc</if>
+    </select>
+
+    <select id="selectDatavEchartsGalleryListByStar" parameterType="DatavEchartsGallery" resultMap="DatavEchartsGalleryResult">
+        select id, name, chart_option, graph, component, thumbnail, links, description,view_count, star_count, create_by, create_time
+        from datav_echarts_gallery as a
+        <where>
+            a.id in (SELECT chart_id FROM datav_user_echarts where username =  #{createBy})
+            and (name like concat('%', #{keyword}, '%')
+            or description like concat('%', #{keyword}, '%'))
+            <if test="chartOption != null  and chartOption != ''"> and chart_option = #{chartOption}</if>
+            <if test="graph != null  and graph != ''"> and graph = #{graph}</if>
+            <if test="component != null  and component != ''"> and component = #{component}</if>
+            <if test="thumbnail != null  and thumbnail != ''"> and thumbnail = #{thumbnail}</if>
+        </where>
+        <!--        order by release_date desc-->
+        <if test='orderBy == "0"'> order by star_count desc</if>
+        <if test='orderBy == "1"'> order by create_time desc</if>
+    </select>
+
+    <select id="selectDatavEchartsGalleryById" parameterType="Long" resultMap="DatavEchartsGalleryResult">
+        <include refid="selectDatavEchartsGalleryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDatavEchartsGallery" parameterType="DatavEchartsGallery" useGeneratedKeys="true" keyProperty="id">
+        insert into datav_echarts_gallery
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="chartOption != null  and chartOption != ''">chart_option,</if>
+            <if test="graph != null  and graph != ''">graph,</if>
+            <if test="component != null  and component != ''">component,</if>
+            <if test="thumbnail != null  and thumbnail != ''">thumbnail,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="links != null  and links != ''">links,</if>
+            <if test="viewCount != null ">view_count,</if>
+            <if test="starCount != null ">star_count,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="chartOption != null  and chartOption != ''">#{chartOption},</if>
+            <if test="graph != null  and graph != ''">#{graph},</if>
+            <if test="component != null  and component != ''">#{component},</if>
+            <if test="thumbnail != null  and thumbnail != ''">#{thumbnail},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="links != null  and links != ''">#{links},</if>
+            <if test="viewCount != null ">#{viewCount},</if>
+            <if test="starCount != null ">#{starCount},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDatavEchartsGallery" parameterType="DatavEchartsGallery">
+        update datav_echarts_gallery
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="chartOption != null">chart_option = #{chartOption},</if>
+            <if test="graph != null">graph = #{graph},</if>
+            <if test="component != null">component = #{component},</if>
+            <if test="thumbnail != null  and thumbnail != ''">thumbnail = #{thumbnail},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="links != null">links = #{links},</if>
+            <if test="viewCount != null ">view_count = #{viewCount},</if>
+            <if test="starCount != null ">star_count = #{starCount},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDatavEchartsGalleryById" parameterType="DatavEchartsGallery">
+        delete from datav_echarts_gallery
+        <where>
+            id = #{id}
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+    </delete>
+
+    <delete id="deleteDatavEchartsGalleryByIds" parameterType="String">
+        delete from datav_echarts_gallery where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--  收藏+1  -->
+    <update id="starIncrease" parameterType="DatavEchartsGallery">
+        update datav_echarts_gallery set star_count = star_count + 1
+        where id = #{id}
+    </update>
+    <!--  收藏-1  -->
+    <update id="starDecrease" parameterType="DatavEchartsGallery">
+        update datav_echarts_gallery set star_count = star_count - 1
+        where id = #{id}
+    </update>
+    <!--  查看+1  -->
+    <update id="viewIncrease" parameterType="DatavEchartsGallery">
+        update datav_echarts_gallery set view_count = view_count + 1
+        where id = #{id}
+    </update>
+</mapper>

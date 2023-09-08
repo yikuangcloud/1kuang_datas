@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavFileUploadMapper">
+    
+    <resultMap type="DatavFileUpload" id="DatavFileUploadResult">
+        <result property="uploadId"    column="upload_id"    />
+        <result property="isOpen"    column="is_open"    />
+        <result property="imagePath"    column="image_path"    />
+        <result property="isTemplate"    column="is_template"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="starCount"    column="star_count"    />
+        <result property="useCount"    column="use_count"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="viewTemplate"    column="view_template"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDatavFileUploadVo">
+        select upload_id, is_open, image_path, type, name, view_template, sort,view_count, star_count, use_count, status, del_flag, create_by, create_time, update_by, update_time, remark from datav_file_upload
+    </sql>
+
+    <select id="selectDatavFileUploadList" parameterType="DatavFileUpload" resultMap="DatavFileUploadResult">
+        <include refid="selectDatavFileUploadVo"/>
+	        where del_flag = '0'
+            <if test="isOpen != null  and isOpen != ''"> and is_open = #{isOpen}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="viewTemplate != null  and viewTemplate != ''"> and view_template = #{viewTemplate}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''">and (is_template is null || is_template = '0') and (is_open = '1' or create_by = #{createBy})</if>
+
+        order by create_time desc
+    </select>
+
+    <select id="selectFileTemplateList" parameterType="DatavFileUploadDto" resultMap="DatavFileUploadResult">
+        <include refid="selectDatavFileUploadVo"/>
+        where del_flag = '0' and is_template = '1'
+        <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+        <if test="type != null  and type != ''"> and type = #{type}</if>
+        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <if test='orderBy == "0"'> order by star_count desc</if>
+        <if test='orderBy == "1"'> order by create_time desc</if>
+    </select>
+
+    <select id="selectFileTemplateListByUser" parameterType="DatavFileUploadDto" resultMap="DatavFileUploadResult">
+        select a.upload_id,  a.image_path, a.type, a.name, a.sort,a.view_count, a.star_count, a.use_count
+        from datav_file_upload as a,favorite_screen_templates as b
+        where a.del_flag = '0' and a.is_template = '1' and b.uid = #{userId} and b.image_upload_id = a.upload_id
+        <if test="sort != null  and sort != ''"> and a.sort = #{sort}</if>
+        <if test="type != null  and type != ''"> and a.type = #{type}</if>
+        <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+        <if test='orderBy == "0"'> order by a.star_count desc</if>
+        <if test='orderBy == "1"'> order by a.create_time desc</if>
+    </select>
+    
+    <select id="selectDatavFileUploadByUsername" parameterType="DatavFileUpload" resultType="int">
+        select count(1) from datav_file_upload
+	        where del_flag = '0' 
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+    </select>
+    
+    <select id="selectDatavFileUploadById" parameterType="String" resultMap="DatavFileUploadResult">
+        <include refid="selectDatavFileUploadVo"/>
+        where upload_id = #{uploadId}
+    </select>
+        
+    <insert id="insertDatavFileUpload" parameterType="DatavFileUpload">
+        insert into datav_file_upload
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uploadId != null  and uploadId != ''">upload_id,</if>
+            <if test="isOpen != null  and isOpen != ''">is_open,</if>
+            <if test="isTemplate != null  and isTemplate != ''">is_template,</if>
+            <if test="imagePath != null  and imagePath != ''">image_path,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="viewTemplate != null  and viewTemplate != ''">view_template,</if>
+            <if test="sort != null  and sort != ''">sort,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uploadId != null  and uploadId != ''">#{uploadId},</if>
+            <if test="isOpen != null  and isOpen != ''">#{isOpen},</if>
+            <if test="isTemplate != null  and isTemplate != ''">#{isTemplate},</if>
+            <if test="imagePath != null  and imagePath != ''">#{imagePath},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="viewTemplate != null  and viewTemplate != ''">#{viewTemplate},</if>
+            <if test="sort != null  and sort != ''">#{sort},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDatavFileUpload" parameterType="DatavFileUpload">
+        update datav_file_upload
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isOpen != null  and isOpen != ''">is_open = #{isOpen},</if>
+            <if test="isTemplate != null  and isTemplate != ''">is_open = #{isTemplate},</if>
+            <if test="imagePath != null  and imagePath != ''">image_path = #{imagePath},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="viewTemplate != null  and viewTemplate != ''">view_template = #{viewTemplate},</if>
+            <if test="sort != null  and sort != ''">sort = #{sort},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where upload_id = #{uploadId}
+    </update>
+
+    <delete id="deleteDatavFileUploadById" parameterType="String">
+        UPDATE datav_file_upload
+		SET del_flag = '1'
+		WHERE upload_id = #{uploadId}
+    </delete>
+
+    <delete id="deleteDatavFileUploadByIds" parameterType="String">
+        delete from datav_file_upload where upload_id in 
+        <foreach item="uploadId" collection="array" open="(" separator="," close=")">
+            #{uploadId}
+        </foreach>
+    </delete>
+
+    <update id="updateFileTemplate" parameterType="FileTemplateDto">
+        update datav_file_upload
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type == 1">view_count = view_count + 1</if>
+            <if test="type == 2">star_count = star_count + 1</if>
+            <if test="type == 3">star_count = star_count - 1</if>
+            <if test="type == 4">use_count = use_count + 1</if>
+        </trim>
+        where upload_id = #{uploadId}
+    </update>
+    
+</mapper>

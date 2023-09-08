@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavDemandQuestionMapper">
+
+    <resultMap type="DatavDemandQuestion" id="DatavDemandQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="templateType"    column="template_type"    />
+        <result property="templateDemand"    column="template_demand"    />
+        <result property="postType"    column="post_type"    />
+        <result property="demandDesc"    column="demand_desc"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectDatavDemandQuestionVo">
+        select id, template_type, template_demand, post_type, demand_desc, create_by, create_time from datav_demand_question
+    </sql>
+
+    <select id="selectDatavDemandQuestionList" parameterType="DatavDemandQuestion" resultMap="DatavDemandQuestionResult">
+        <include refid="selectDatavDemandQuestionVo"/>
+        <where>
+            <if test="templateType != null  and templateType != ''"> and template_type = #{templateType}</if>
+            <if test="templateDemand != null  and templateDemand != ''"> and template_demand = #{templateDemand}</if>
+            <if test="postType != null  and postType != ''"> and post_type = #{postType}</if>
+            <if test="demandDesc != null  and demandDesc != ''"> and demand_desc = #{demandDesc}</if>
+        </where>
+    </select>
+
+    <select id="selectDatavDemandQuestionById" parameterType="Long" resultMap="DatavDemandQuestionResult">
+        <include refid="selectDatavDemandQuestionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDatavDemandQuestion" parameterType="DatavDemandQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into datav_demand_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateType != null  and templateType != ''">template_type,</if>
+            <if test="templateDemand != null  and templateDemand != ''">template_demand,</if>
+            <if test="postType != null  and postType != ''">post_type,</if>
+            <if test="demandDesc != null  and demandDesc != ''">demand_desc,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateType != null  and templateType != ''">#{templateType},</if>
+            <if test="templateDemand != null  and templateDemand != ''">#{templateDemand},</if>
+            <if test="postType != null  and postType != ''">#{postType},</if>
+            <if test="demandDesc != null  and demandDesc != ''">#{demandDesc},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDatavDemandQuestion" parameterType="DatavDemandQuestion">
+        update datav_demand_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateType != null  and templateType != ''">template_type = #{templateType},</if>
+            <if test="templateDemand != null  and templateDemand != ''">template_demand = #{templateDemand},</if>
+            <if test="postType != null  and postType != ''">post_type = #{postType},</if>
+            <if test="demandDesc != null  and demandDesc != ''">demand_desc = #{demandDesc},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDatavDemandQuestionById" parameterType="Long">
+        delete from datav_demand_question where id = #{id}
+    </delete>
+
+    <delete id="deleteDatavDemandQuestionByIds" parameterType="String">
+        delete from datav_demand_question where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getTemplateTypeCount" resultType="java.util.HashMap">
+        SELECT template_type name, COUNT(*) value FROM `datav_demand_question` GROUP BY template_type
+    </select>
+
+    <select id="getTemplateDemandCount" resultType="java.util.HashMap">
+        SELECT template_demand name,COUNT(*) value FROM `datav_demand_question` GROUP BY template_demand
+    </select>
+
+    <select id="getPostTypeCount" resultType="java.util.HashMap">
+        SELECT post_type name,COUNT(*) value FROM `datav_demand_question` GROUP BY post_type
+    </select>
+
+    <select id="getpostAndDemandCount" resultType="java.util.HashMap">
+        SELECT template_demand yAxis, post_type xAxis, COUNT(*) value FROM `datav_demand_question` GROUP BY template_demand,post_type
+    </select>
+</mapper>

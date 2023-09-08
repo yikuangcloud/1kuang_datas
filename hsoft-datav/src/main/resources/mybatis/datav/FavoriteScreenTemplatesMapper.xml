@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.FavoriteScreenTemplatesMapper">
+    
+    <resultMap type="FavoriteScreenTemplates" id="FavoriteScreenTemplatesResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="screenId"    column="screen_id"    />
+        <result property="imageUploadId"    column="image_upload_id"    />
+    </resultMap>
+
+    <resultMap type="FavoriteScreenTemplatesVo" id="UserFavoriteScreenTemplatesResult">
+        <result property="screenId"    column="screen_id"    />
+        <result property="imageUploadId"    column="image_upload_id"    />
+    </resultMap>
+
+    <sql id="selectFavoriteScreenTemplatesVo">
+        select id, uid, screen_id, image_upload_id from favorite_screen_templates
+    </sql>
+
+    <select id="selectFavoriteScreenTemplatesList" parameterType="FavoriteScreenTemplates" resultMap="FavoriteScreenTemplatesResult">
+        <include refid="selectFavoriteScreenTemplatesVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="screenId != null  and screenId != ''"> and screen_id = #{screenId}</if>
+            <if test="imageUploadId != null  and imageUploadId != ''"> and image_upload_id = #{imageUploadId}</if>
+        </where>
+    </select>
+
+    <select id="selectFavoriteListByUser" parameterType="FavoriteScreenTemplates" resultMap="UserFavoriteScreenTemplatesResult">
+        <include refid="selectFavoriteScreenTemplatesVo"/>
+        where uid = #{uid}
+    </select>
+
+    
+    <select id="selectFavoriteScreenTemplatesById" parameterType="Long" resultMap="FavoriteScreenTemplatesResult">
+        <include refid="selectFavoriteScreenTemplatesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFavoriteScreenTemplates" parameterType="FavoriteScreenTemplates">
+        insert into favorite_screen_templates
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="uid != null ">uid,</if>
+            <if test="screenId != null  and screenId != ''">screen_id,</if>
+            <if test="imageUploadId != null  and imageUploadId != ''">image_upload_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="uid != null ">#{uid},</if>
+            <if test="screenId != null  and screenId != ''">#{screenId},</if>
+            <if test="imageUploadId != null  and imageUploadId != ''">#{imageUploadId},</if>
+         </trim>
+    </insert>
+
+    <select id="isExisted" parameterType="FavoriteScreenTemplates" resultMap="FavoriteScreenTemplatesResult">
+        <include refid="selectFavoriteScreenTemplatesVo"/>
+        <where>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="screenId != null  and screenId != ''"> and screen_id = #{screenId}</if>
+            <if test="imageUploadId != null  and imageUploadId != ''"> and image_upload_id = #{imageUploadId}</if>
+        </where>
+        limit 1
+    </select>
+
+    <update id="updateFavoriteScreenTemplates" parameterType="FavoriteScreenTemplates">
+        update favorite_screen_templates
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null ">uid = #{uid},</if>
+            <if test="screenId != null  and screenId != ''">screen_id = #{screenId},</if>
+            <if test="imageUploadId != null  and imageUploadId != ''">image_upload_id = #{imageUploadId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFavoriteScreenTemplatesById" parameterType="Long">
+        delete from favorite_screen_templates where id = #{id}
+    </delete>
+
+    <delete id="deleteFavoriteScreenTemplatesByIds" parameterType="String">
+        delete from favorite_screen_templates where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

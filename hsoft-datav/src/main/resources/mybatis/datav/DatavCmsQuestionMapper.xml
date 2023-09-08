@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.datav.mapper.DatavCmsQuestionMapper">
+
+    <resultMap type="DatavCmsQuestion" id="DatavCmsQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="contentText"    column="content_text"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="tags"    column="tags"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+    <resultMap type="DatavCmsQuestionVo" id="DatavCmsQuestionVoResult">
+        <result property="id"    column="id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="parentId"    column="parentId"    />
+        <result property="parentUsername"    column="parent_username"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="contentText"    column="content_text"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="tags"    column="tags"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectDatavCmsQuestionVo">
+        select id, question_id, parent_id, title, content,content_text, view_count, tags, create_by, create_time from datav_cms_question
+    </sql>
+
+    <select id="selectDatavCmsQuestionList" parameterType="DatavCmsQuestion" resultMap="DatavCmsQuestionResult">
+        <include refid="selectDatavCmsQuestionVo"/>
+        <where>
+            <if test="questionId != null "> and question_id = #{questionId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="viewCount != null "> and view_count = #{viewCount}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+        </where>
+    </select>
+
+    <select id="selectQuestionList" parameterType="DatavCmsQuestionDto" resultMap="DatavCmsQuestionResult">
+        <include refid="selectDatavCmsQuestionVo"/>
+            where question_id is null
+            <if test="keyword != null  and keyword != ''"> and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="tags != null  and tags != ''"> and
+
+                <foreach item="tag" collection="tagArr" separator="AND" open="(" close=")" index="">
+                   find_in_set(#{tag},tags)
+                </foreach>
+
+             </if>
+
+        <if test='orderType == "0"'> order by create_time desc</if>
+        <if test='orderType == "1"'> order by view_count desc</if>
+    </select>
+
+    <select id="selectDatavCmsQuestionById" parameterType="Long" resultMap="DatavCmsQuestionVoResult">
+        <include refid="selectDatavCmsQuestionVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectFirstCommentById" parameterType="Long" resultMap="DatavCmsQuestionVoResult">
+        <include refid="selectDatavCmsQuestionVo"/>
+        where question_id = #{id} and parent_id is null
+    </select>
+    <select id="selectSecondCommentById" parameterType="Long" resultMap="DatavCmsQuestionVoResult">
+        SELECT id, question_id, parent_id AS parentId, title, content,content_text, view_count, tags, create_by, create_time,
+        (SELECT create_by FROM datav_cms_question WHERE id = parentId) as parent_username FROM `datav_cms_question`
+        where question_id = #{id} and parent_id is not null
+    </select>
+    <insert id="insertDatavCmsQuestion" parameterType="DatavCmsQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into datav_cms_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null ">question_id,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="contentText != null  and contentText != ''">content_text,</if>
+            <if test="viewCount != null ">view_count,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null ">#{questionId},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="contentText != null  and contentText != ''">#{contentText},</if>
+            <if test="viewCount != null ">#{viewCount},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDatavCmsQuestion" parameterType="DatavCmsQuestion">
+        update datav_cms_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="questionId != null ">question_id = #{questionId},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="contentText != null">content_text = #{contentText},</if>
+            <if test="viewCount != null ">view_count = #{viewCount},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDatavCmsQuestionById" parameterType="Long">
+        delete from datav_cms_question where id = #{id}
+    </delete>
+
+    <delete id="deleteDatavCmsQuestionByIds" parameterType="String">
+        delete from datav_cms_question where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="viewCountIncrease" parameterType="Long">
+        update datav_cms_question set view_count = view_count + 1
+        where id = #{id}
+    </update>
+    <!-- 最新回复列表   -->
+    <select id="getLatestReply" parameterType="DatavCmsQuestion" resultMap="DatavCmsQuestionResult">
+        select b.question_id,b.content_text,create_by,(select title from datav_cms_question as a where b.question_id = a.id ) as title
+        from datav_cms_question as b
+        where b.question_id is not null ORDER BY b.create_time desc limit 5
+    </select>
+
+</mapper>
