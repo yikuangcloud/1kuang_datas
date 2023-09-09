@@ -1,67 +1,9 @@
-大数据学习指南
-===
->大数据学习指南，从零开始学习大数据开发，包含大数据学习各个阶段资汇总     
-
-## 公众号
-关注我的公众号：**旧时光大数据**，回复相应关键字，获取更多大数据干货、资料<br>    
-“大数据学习路线”中我自己看过的视频、文档资料可以直接在公众号获取云盘链接  
-
-### 《[大数据面试题 V4.0](https://mp.weixin.qq.com/s/NV90886HAQqBRB1hPNiIPQ)》已出，公众号回复：大数据面试题     
-
-<p align="center">
-<img src="https://github.com/MoRan1607/BigDataGuide/blob/master/Pics/%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" width="200" height="200"/>  
-<p align="center">
-</p>
-</p>    
-
-已开星球，星球内容包括学习路线、学习资料（根据编程语言分了三大版本）、项目、面试题（大数据面试题、Java基础、计算机网络）、800+篇真实面经（已按公司分类）、自己整理的视频学习笔记
-<p align="center">
-<img src="https://raw.githubusercontent.com/qiye0716/picture_typora/main/img/202307011514446.png"  width="300" height="387"/>  
-<p align="center">
-</p>
-</p>  
-
 概述
 ---
 [大数据简介](https://github.com/Dr11ft/BigDataGuide/blob/master/Docs/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%80%E4%BB%8B.md)
 
 [大数据相关岗位介绍](https://github.com/Dr11ft/BigDataGuide/blob/master/Docs/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3%E5%B2%97%E4%BD%8D%E4%BB%8B%E7%BB%8D.md)  
 
-大数据学习路线
----
-学习路线中的视频、文档资料可以关注公众号：旧时光大数据，回复相应关键字获取云盘链接  
-  
-[大数据学习路线（包含自己看过的视频链接）](https://github.com/Dr11ft/BigDataGuide/blob/master/Docs/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF.md)
-
-编程语言  
----  
-编程语言部分建议先JavaSE，Spark和Flink之前学习Scala，如果时间紧迫，就找个Java版的Spark或Flink教程，Python看个人或工作，不过有Java基础，Python会快很多（别问我怎么学，问就是使劲拼命学 [ 吃瓜.jpg ]）  
-### 一、JavaSE（二选一）     
-[刘意2019版](https://www.bilibili.com/video/BV1gb411F76B?from=search&seid=16116797084076868427)   
-    
-[尚硅谷宋红康版](https://www.bilibili.com/video/BV1Kb411W75N?from=search&seid=9321658006825735818)   
-
-### 二、Scala（二选一）  
-如果时间短，建议直接看配套Spark的那种三五天的，可以快速了解  
-   
-[韩顺平老师版](https://www.bilibili.com/video/BV1Mp4y1e7B5?from=search&seid=5450215228532207134)   
-   
-[清华硕士武晟然老师版](https://www.bilibili.com/video/BV1Mp4y1e7B5?from=search&seid=5450215228532207134)   
-
-### 三、Python  
-推荐黑马的Python视频，通俗易懂，而且文档比较齐全，有Java基础再看Python的话，上手很快   
-   
-[黑马Python版视频](https://www.bilibili.com/video/BV1C4411A7ej?from=search&seid=11669436417044703145)   
-    
-[Python文档and笔记](https://github.com/MoRan1607/BigDataGuide/blob/master/Python/Python%E6%96%87%E6%A1%A3.md)    
-
-Linux
----  
-[完全分布式集群搭建文档](https://github.com/Dr11ft/BigDataGuide/blob/master/Hadoop/%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA.md)  
-    
-关于VM、远程登录工具的安装暂时可以参考我的博客，找到相应步骤进行操作即可  
-    
-[集群搭建](https://blog.csdn.net/qq_41544550/category_9458240.html)  
 
 大数据框架组件
 ---
@@ -280,21 +222,4 @@ https://github.com/Dr11ft/BigDataGuide/blob/master/%E9%9D%A2%E8%AF%95/Zookeeper%
 &emsp; 7.[Spark面试题总结（七）——程序开发调优](https://github.com/Dr11ft/BigDataGuide/blob/master/%E9%9D%A2%E8%AF%95/Spark%E9%9D%A2%E8%AF%95%E9%A2%98%E6%95%B4%E7%90%86/Spark%E8%B0%83%E4%BC%98/%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E8%B0%83%E4%BC%98.md)  
 &emsp; 8.[Spark面试题总结（八）——运行资源调优](https://github.com/Dr11ft/BigDataGuide/blob/master/%E9%9D%A2%E8%AF%95/Spark%E9%9D%A2%E8%AF%95%E9%A2%98%E6%95%B4%E7%90%86/Spark%E8%B0%83%E4%BC%98/%E8%B5%84%E6%BA%90%E8%B0%83%E4%BC%98.md)  
 
-大数据&后端书籍
----   
-&emsp; **图片上的PDF书籍在公众号回复关键字“大数据书籍”或“Java书籍”自行进百度云盘群保存即可**  
-#### &emsp; 大数据书籍  
-<p align="center">
-<img src="https://github.com/Dr11ft/BigDataGuide/blob/master/Pics/%E7%94%B5%E5%AD%90%E4%B9%A6%26%E9%A1%B9%E7%9B%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E4%B9%A6%E6%9E%B6.png"/>  
-<p align="center">
-</p>
-</p>  
-
-## 交流群
-交流群建好了，进群的小伙伴可以加我微信：**MoRan1607，备注：GitHub**  
-<p align="center">
-<img src="https://github.com/Dr11ft/BigDataGuide/blob/master/Pics/%E5%BE%AE%E4%BF%A1.jpg" width="200" height="200"/>  
-<p align="center">
-</p>
-</p>  
 
